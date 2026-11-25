@@ -87,7 +87,7 @@ window.I18N = {
     "ft.site": "หน้าเว็บ",
     "ft.privacy": "นโยบายความเป็นส่วนตัว",
     "gb.h": "สมุดเยี่ยม",
-    "gb.lead": "แขกที่อนุญาตให้ลงรูป เรียงจากล่าสุด"
+    "gb.lead": "รูปแขกที่มาคลินิก ตั้งแต่ปี 2566"
   },
   en: {
     "bk.more": "Saved for the next guests",
@@ -176,6 +176,6 @@ window.I18N = {
     "ft.site": "Pages",
     "ft.privacy": "Privacy policy",
     "gb.h": "Guest book",
-    "gb.lead": "Guests who agreed to be shown, newest first."
+    "gb.lead": "Photos of guests at the clinic since 2023."
   }
 };
