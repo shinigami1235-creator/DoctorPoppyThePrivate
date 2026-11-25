@@ -75,6 +75,9 @@
     $("#pgL").innerHTML = pageHTML(pages[i], i + 1);
     $("#pgR").innerHTML = pv === 2 ? pageHTML(pages[i + 1], i + 2) : "";
     if (drop) $$(".snap", gbook).forEach(s => s.classList.add("drop"));
+    const p = views() > 1 ? spread / (views() - 1) : 0;
+    gbook.style.setProperty("--l", (2 + 9 * p).toFixed(1) + "px");
+    gbook.style.setProperty("--r", (2 + 9 * (1 - p)).toFixed(1) + "px");
     $("#bkCount").textContent = `${spread + 1} / ${views()}`;
     $("#bkPrev").disabled = spread === 0;
     $("#bkNext").disabled = spread >= views() - 1;
