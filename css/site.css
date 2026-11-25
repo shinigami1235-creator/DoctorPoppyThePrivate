@@ -292,7 +292,7 @@ body.menu-open{overflow:hidden}
 .doc-photo img{position:relative;border-radius:6px;width:100%;aspect-ratio:620/742;object-fit:cover}
 .doc-name{font-family:var(--display);font-weight:600;font-size:clamp(42px,5.6vw,78px);line-height:1.05;margin-bottom:18px;text-wrap:balance}
 .doc-name small{display:block;font-family:var(--body);font-weight:500;font-size:16px;color:var(--gold);margin-top:10px}
-.stats{list-style:none;padding:0;display:grid;grid-template-columns:repeat(3,1fr);border-block:1px solid var(--marble);margin:30px 0 10px}
+.stats{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));border-block:1px solid var(--marble);margin:30px 0 10px}
 .stats li{padding:20px 14px 18px 0}
 .stats li+li{padding-left:18px;border-left:1px solid var(--marble)}
 .stats b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(34px,3.6vw,50px);color:var(--coral);font-variant-numeric:tabular-nums;line-height:1}
@@ -575,3 +575,12 @@ body.menu-open{overflow:hidden}
   .top nav a::after{left:50%;top:calc(100% + 14px);bottom:auto;width:10px;height:24px;border-radius:0;background:linear-gradient(90deg,#b8924e,#e2c68c 45%,#c39d58);clip-path:polygon(0 0,100% 0,100% 100%,50% calc(100% - 6px),0 100%);transform:translateX(-50%) scaleY(0);transform-origin:top;transition:transform .35s cubic-bezier(.2,.8,.3,1)}
   .top nav a.on::after{transform:translateX(-50%) scaleY(1)}
 }
+
+/* last page: empty frames waiting for the next guests */
+.snap.empty{pointer-events:none}
+.snap.empty .ghost{display:block;background:rgba(255,255,255,.35);padding:7% 7% 5%;border:1.5px dashed rgba(176,141,87,.55)}
+.snap.empty .ghost i{display:block;aspect-ratio:3/4;border:1.5px dashed rgba(176,141,87,.4)}
+.snap.empty .tape{opacity:.6}
+.pg-more{position:absolute;left:8cqw;right:8cqw;top:42cqh;text-align:center;font-size:min(5cqw,4cqh);color:var(--coral);transform:rotate(-3deg);margin:0}
+.flipper.no-t{transition:none}
+.pg-more{left:7cqw;right:auto;width:44cqw;top:auto;bottom:15cqh;text-align:left;transform:rotate(-4deg)}

@@ -40,7 +40,8 @@
       const list = guests.filter(g => g.date.startsWith(y));
       for (let i = 0; i < list.length; i += 2) pages.push({ type: "photos", year: y, list: list.slice(i, i + 2) });
     });
-    if (pages.length % 2) pages.push({ type: "blank" });
+    pages.push({ type: "more" });
+    if (!single() && pages.length % 2) pages.push({ type: "more", quiet: true });
     return pages;
   }
   const TILT = [-4, 3, -2, 5, -3, 2];
@@ -54,6 +55,8 @@
         <p class="pg-hint">${esc(t("bk.hint"))}</p></div><span class="pg-no">${n}</span>`;
     }
     if (pg.type === "blank") return `<span class="pg-no">${n}</span>`;
+    if (pg.type === "more") return [0, 1].map(i => `<figure class="snap empty s${i}" style="--r:${TILT[(n * 2 + i) % TILT.length]}deg"><span class="ghost"><span class="tape${i ? " gold" : ""}"></span><i></i></span></figure>`).join("")
+      + (pg.quiet ? "" : `<p class="pg-more hand">${esc(t("bk.more"))}</p>`) + `<span class="pg-no">${n}</span>`;
     const snaps = withSnaps ? pg.list.map((g, i) => {
       const r = TILT[(n * 2 + i) % TILT.length];
       return `<figure class="snap s${i}${g.shape === "wide" ? " wide" : ""}" style="--r:${r}deg;--d:${i * 160}ms">
@@ -98,19 +101,24 @@
     const pv = perView();
     if (reduce) { spread = next; drawBook(false); return; }
     turning = true;
-    const oldL = $("#pgL").innerHTML, oldR = $("#pgR").innerHTML;
-    const ni = next * pv;
-    const newL = pageHTML(pages[ni], ni + 1, false), newR = pv === 2 ? pageHTML(pages[ni + 1], ni + 2, false) : "";
+    const ci = spread * pv, ni = next * pv;
+    const P = i => pageHTML(pages[i], i + 1);
+    const oldL = P(ci), oldR = pv === 2 ? P(ci + 1) : "";
+    const newL = P(ni), newR = pv === 2 ? P(ni + 1) : "";
     const flip = document.createElement("div");
     flip.className = "flipper " + (pv === 1 ? "full" : dir > 0 ? "on-right" : "on-left");
     let front, back;
-    if (pv === 1) { front = oldL; back = ""; $("#pgL").innerHTML = newL; }
+    if (pv === 1) { if (dir > 0) { front = oldL; back = ""; $("#pgL").innerHTML = newL; } else { front = newL; back = ""; } }
     else if (dir > 0) { front = oldR; back = newL; $("#pgR").innerHTML = newR; }
     else { front = oldL; back = newR; $("#pgL").innerHTML = newL; }
     flip.innerHTML = `<div class="face front page ${pv === 1 ? "left" : dir > 0 ? "right" : "left"}">${front}</div><div class="face back page ${pv === 1 ? "left" : dir > 0 ? "left" : "right"}">${back}</div>`;
+    // on a phone, going back brings the previous page in from the left over the current one
+    const swingIn = pv === 1 && dir < 0;
+    if (swingIn) flip.classList.add("go-next", "no-t");
     gbook.appendChild(flip);
-    requestAnimationFrame(() => requestAnimationFrame(() => flip.classList.add(dir > 0 || pv === 1 ? "go-next" : "go-prev")));
-    setTimeout(() => { flip.remove(); spread = next; drawBook(true); turning = false; }, 760);
+    if (swingIn) { flip.getBoundingClientRect(); flip.classList.remove("no-t"); }
+    requestAnimationFrame(() => requestAnimationFrame(() => swingIn ? flip.classList.remove("go-next") : flip.classList.add(dir > 0 || pv === 1 ? "go-next" : "go-prev")));
+    setTimeout(() => { spread = next; drawBook(false); flip.remove(); turning = false; }, 780);
   }
   if (gbook) {
     $("#bkPrev").addEventListener("click", () => turn(-1));
@@ -158,7 +166,6 @@
     const row = $("#withRow");
     if (row) row.innerHTML = guests.filter(g => g.with_doctor).slice(0, 5).map((g, i) =>
       `<button type="button" data-guest="${esc(g.id)}" title="${esc(name(g))}" style="--r:${TILT[i % TILT.length]}deg"><img src="${esc(g.photo)}" alt="${esc(name(g))}" loading="lazy" style="object-position:${esc(g.focus || "50% 40%")}"><span class="hand">${esc(name(g))}</span></button>`).join("");
-    const n = $("#docGuests"); if (n) n.dataset.count = people().length;
   }
   function countUp(el) {
     const end = parseFloat(el.dataset.count || "0"), dec = +(el.dataset.dec || 0), suf = el.dataset.suffix || "";
@@ -273,7 +280,7 @@
     $$("[data-i18n-html]").forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
     $$("[data-i18n-aria]").forEach(el => el.setAttribute("aria-label", t(el.dataset.i18nAria)));
     $$(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
-    const count = $("#guestCount"); if (count) count.textContent = people().length;
+    const lg = $("#latestGuest"); if (lg && guests[0]) lg.innerHTML = `${esc(name(guests[0]))}<small>${month(guests[0].date)}</small>`;
     const T = window.TREATMENTS || {};
     if ($("#skinList")) $("#skinList").innerHTML = (T.skin || []).map(priceItem).join("");
     if ($("#dentalList")) $("#dentalList").innerHTML = (T.dental || []).map(priceItem).join("");

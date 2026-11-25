@@ -1,8 +1,9 @@
 // Interface text in Thai and English. Thai is the default.
 window.I18N = {
   th: {
+    "bk.more": "ที่ว่างสำหรับแขกท่านต่อไป",
     "bk.hint": "ปัดหรือกดลูกศรเพื่อเปิดหน้า",
-    "bk.count": "แขก {n} ท่าน · {from} ถึง {to}",
+    "bk.count": "{from} ถึง {to}",
     "bk.sub": "ด๊อกเตอร์ป๊อปปี้ เดอะไปรเวทคลินิก",
     "doctor.licence.v": "ว.00000",
     "next": "หน้าถัดไป",
@@ -15,7 +16,7 @@ window.I18N = {
     "doctor.s3": "แขกในสมุดเยี่ยม",
     "doctor.s2": "คะแนนรีวิวบน GoWabi",
     "doctor.s1": "ผู้ติดตามบน @doraepop",
-    "guests.sum": "แขก {n} ท่าน ถ่ายรูปที่ผนังหินอ่อนของคลินิก ตั้งแต่ปี {from}",
+    "guests.sum": "บางส่วนของแขกที่มาคลินิกตั้งแต่ปี {from} หน้าใหม่จะเพิ่มเมื่อแขกอนุญาตให้ลงรูป",
     "nav.guests": "สมุดเยี่ยม",
     "nav.doctor": "คุณหมอป๊อปปี้",
     "nav.treatments": "ทรีตเมนต์และราคา",
@@ -26,7 +27,7 @@ window.I18N = {
     "menu": "เมนู",
     "toc": "สารบัญ",
     "hero.sub": "เดอะไปรเวทคลินิก · <b>ลาดพร้าว 15</b>",
-    "p.guests.k": "สมุดเยี่ยม",
+    "p.guests.k": "แขกล่าสุดในสมุดเยี่ยม",
     "p.guests.unit": "ท่าน",
     "p.ulthera.k": "อัลเทอร่า",
     "p.ulthera.s": "300 เส้น ทั่วหน้า",
@@ -86,11 +87,12 @@ window.I18N = {
     "ft.site": "หน้าเว็บ",
     "ft.privacy": "นโยบายความเป็นส่วนตัว",
     "gb.h": "สมุดเยี่ยม",
-    "gb.lead": "ทุกการมาเยือน เรียงจากล่าสุด"
+    "gb.lead": "แขกที่อนุญาตให้ลงรูป เรียงจากล่าสุด"
   },
   en: {
+    "bk.more": "Saved for the next guests",
     "bk.hint": "Swipe or use the arrows to turn the page",
-    "bk.count": "{n} guests · {from} to {to}",
+    "bk.count": "{from} to {to}",
     "bk.sub": "Doctor Poppy The Private Clinic",
     "doctor.licence.v": "No. 00000",
     "next": "Next page",
@@ -103,7 +105,7 @@ window.I18N = {
     "doctor.s3": "guests in the guest book",
     "doctor.s2": "review score on GoWabi",
     "doctor.s1": "followers on @doraepop",
-    "guests.sum": "{n} guests photographed at the clinic's marble wall since {from}",
+    "guests.sum": "Some of the guests who have visited since {from}. New pages go in when a guest agrees to be shown.",
     "nav.guests": "Guest book",
     "nav.doctor": "Dr. Poppy",
     "nav.treatments": "Treatments and prices",
@@ -114,7 +116,7 @@ window.I18N = {
     "menu": "Menu",
     "toc": "Contents",
     "hero.sub": "The Private Clinic · <b>Lat Phrao 15</b>",
-    "p.guests.k": "Guest book",
+    "p.guests.k": "Latest in the guest book",
     "p.guests.unit": "guests",
     "p.ulthera.k": "Ulthera",
     "p.ulthera.s": "300 lines, full face",
@@ -174,6 +176,6 @@ window.I18N = {
     "ft.site": "Pages",
     "ft.privacy": "Privacy policy",
     "gb.h": "Guest book",
-    "gb.lead": "Every visit, newest first."
+    "gb.lead": "Guests who agreed to be shown, newest first."
   }
 };
