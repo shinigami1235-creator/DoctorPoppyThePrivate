@@ -81,7 +81,12 @@
     const gap = $("#gap"); if (!gap) return;
     $$(".slide", gap).forEach(s => s.remove());
     const list = [...guests.filter(g => g.name_en), ...guests.filter(g => !g.name_en)].slice(0, 8);
-    list.forEach((g, i) => gap.insertAdjacentHTML("afterbegin", `<div class="slide${i === 0 ? " on" : ""}" data-i="${i}"><img src="${g.photo}" alt="" ${i ? 'loading="lazy"' : ""}></div>`));
+    list.forEach((g, i) => {
+      const d = document.createElement("div");
+      d.className = "slide" + (i === 0 ? " on" : ""); d.dataset.i = i;
+      const im = document.createElement("img"); im.src = g.photo; im.alt = ""; if (i) im.loading = "lazy";
+      d.appendChild(im); gap.prepend(d);
+    });
     const cap = $("#gapCaption");
     let i = 0;
     const show = () => { $$(".slide", gap).forEach(s => s.classList.toggle("on", +s.dataset.i === i)); if (cap && list[i]) cap.innerHTML = `<strong>${name(list[i])}</strong>${month(list[i].date)}`; };
