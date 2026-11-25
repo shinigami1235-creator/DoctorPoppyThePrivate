@@ -584,3 +584,6 @@ body.menu-open{overflow:hidden}
 .pg-more{position:absolute;left:8cqw;right:8cqw;top:42cqh;text-align:center;font-size:min(5cqw,4cqh);color:var(--coral);transform:rotate(-3deg);margin:0}
 .flipper.no-t{transition:none}
 .pg-more{left:7cqw;right:auto;width:44cqw;top:auto;bottom:15cqh;text-align:left;transform:rotate(-4deg)}
+/* the closed menu must never sit over the page */
+.sheet[hidden]{display:none}
+.sheet:not(.open){pointer-events:none}
