@@ -38,7 +38,7 @@
     const box = $("#machineList"); if (!box) return;
     box.innerHTML = (window.MACHINES || []).map(m => `
       <article class="mcard">
-        ${m.photo ? `<img src="${m.photo}" alt="${m.name}" loading="lazy">` : `<div class="mname" aria-hidden="true">${m.name}</div>`}
+        <img src="${m.photo}" alt="${m.name}" loading="lazy">
         <h3>${m.name}</h3>
         <p class="muse">${lang === "th" ? m.use_th : m.use_en}</p>
         <dl class="plate"><dt>${t("mc.maker")}</dt><dd>${m.maker}</dd><dt>${t("mc.serial")}</dt><dd>${m.serial}</dd></dl>
@@ -91,8 +91,9 @@
     list.forEach((g, i) => {
       const d = document.createElement("div");
       d.className = "slide" + (i === 0 ? " on" : ""); d.dataset.i = i;
-      const im = document.createElement("img"); im.src = g.photo; im.alt = ""; if (i) im.loading = "lazy";
-      d.appendChild(im); gap.prepend(d);
+      const bg = document.createElement("div"); bg.className = "bg"; bg.style.backgroundImage = "url('" + g.photo + "')";
+      const im = document.createElement("img"); im.className = "fg"; im.src = g.photo; im.alt = ""; if (i) im.loading = "lazy";
+      d.append(bg, im); gap.prepend(d);
     });
     const cap = $("#gapCaption");
     let i = 0;
@@ -106,16 +107,31 @@
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   function heroFrame() {
     if (!hero || reduce) return;
+    const w1 = $(".w1"), w2 = $(".w2"), gap = $("#gap"), panels = $(".panels"), cap = $("#gapCaption");
+    const vh = innerHeight;
     const r = hero.getBoundingClientRect();
-    const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
-    const open = Math.min(1, p / 0.45);
-    const ease = 1 - Math.pow(1 - open, 3);
-    const shift = ease * innerHeight * 0.38;
-    $(".w1").style.transform = `translateY(${-shift}px)`;
-    $(".w2").style.transform = `translateY(${shift}px)`;
-    const inset = 50 - ease * 34;
-    $("#gap").style.clipPath = `inset(${inset}% 0 ${inset}% 0)`;
-    $$(".panel").forEach((el, k) => el.classList.toggle("in", p > 0.4 + k * 0.12));
+    const p = Math.min(1, Math.max(0, -r.top / (r.height - vh)));
+    const e = 1 - Math.pow(1 - Math.min(1, p / 0.4), 3);
+    const H = w1.offsetHeight;
+    const topRoom = 82, botRoom = 16, gapPad = 12;
+    const s = Math.min(1, Math.max(0.28, (vh * 0.11) / H));
+    const scale = 1 - (1 - s) * e;
+    const dy1 = (topRoom - w1.offsetTop) * e;
+    const dy2 = ((vh - botRoom) - (w2.offsetTop + w2.offsetHeight)) * e;
+    w1.style.transform = `translateY(${dy1}px) scale(${scale})`;
+    w2.style.transform = `translateY(${dy2}px) scale(${scale})`;
+    const topIn = (vh / 2) + ((topRoom + H * s + gapPad) - vh / 2) * e;
+    const botIn = (vh / 2) + ((botRoom + H * s + gapPad) - vh / 2) * e;
+    gap.style.clipPath = `inset(${topIn}px 0 ${botIn}px 0 round 6px)`;
+    if (cap) {
+      if (innerWidth > 760) { cap.style.bottom = (botIn + 22) + "px"; cap.style.top = "auto"; }
+      else { cap.style.top = (topIn + 14) + "px"; cap.style.bottom = "auto"; }
+    }
+    if (panels) {
+      if (innerWidth > 760) { panels.style.top = ((topIn + vh - botIn) / 2) + "px"; panels.style.bottom = "auto"; }
+      else { panels.style.top = "auto"; panels.style.bottom = (botIn + 14) + "px"; }
+    }
+    $$(".panel").forEach((el, k) => el.classList.toggle("in", p > 0.42 + k * 0.1));
     const sub = $(".hero-sub"); if (sub) sub.style.opacity = String(Math.max(0, 1 - p * 6));
   }
 

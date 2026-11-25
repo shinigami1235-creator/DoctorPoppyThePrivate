@@ -61,8 +61,8 @@ a{color:inherit}
 .word{position:absolute;left:0;right:0;text-align:center;font-family:var(--display);font-weight:700;
   font-size:clamp(64px,15.5vw,250px);line-height:.86;letter-spacing:.04em;color:var(--ink);
   will-change:transform;pointer-events:none;z-index:3}
-.word.w1{top:calc(50% - .86em)}
-.word.w2{top:50%;color:var(--coral)}
+.word.w1{top:calc(50% - .86em);transform-origin:50% 0}
+.word.w2{top:50%;color:var(--coral);transform-origin:50% 100%}
 .word .gild{background:linear-gradient(100deg,var(--gold) 0%,var(--gold-light) 45%,var(--gold) 70%);
   -webkit-background-clip:text;background-clip:text;color:transparent}
 .hero-sub{position:absolute;bottom:6vh;transition:opacity .3s;left:0;right:0;text-align:center;font-size:13px;letter-spacing:.32em;color:var(--ink-soft);text-transform:uppercase;z-index:4}
@@ -70,9 +70,10 @@ a{color:inherit}
 .gap{position:absolute;inset:0;z-index:2;clip-path:inset(50% 0 50% 0);will-change:clip-path;background:#1d1717}
 .gap .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
 .gap .slide.on{opacity:1}
-.gap .slide img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
-.gap::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 65%,rgba(0,0,0,.45))}
-.gap .caption{position:absolute;left:var(--pad);bottom:22vh;color:#fff;z-index:3;font-size:14px;letter-spacing:.06em}
+.gap .slide .bg{position:absolute;inset:-40px;background-size:cover;background-position:center;filter:blur(30px) brightness(.62) saturate(1.1)}
+.gap .slide .fg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.gap::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.35),rgba(0,0,0,0) 35%)}
+.gap .caption{position:absolute;left:var(--pad);bottom:22vh;max-width:40vw;color:#fff;z-index:3;font-size:14px;letter-spacing:.06em}
 .gap .caption strong{display:block;font-family:var(--display);font-size:clamp(22px,2.6vw,34px);letter-spacing:.06em;font-weight:600}
 .panels{position:absolute;right:var(--pad);top:50%;transform:translateY(-50%);z-index:4;display:grid;gap:12px;width:min(300px,80vw)}
 .panel{background:rgba(255,253,251,.94);border:1px solid var(--gold-light);border-radius:var(--radius);padding:16px 18px;
@@ -81,7 +82,7 @@ a{color:inherit}
 .panel .k{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
 .panel .v{font-family:var(--display);font-size:24px;font-weight:600;line-height:1.2;margin-top:2px}
 .panel .v small{font-family:var(--body);font-size:13px;color:var(--ink-soft);font-weight:400;display:block;margin-top:3px}
-@media (max-width:760px){.panels{right:auto;left:50%;top:auto;bottom:19vh;transform:translateX(-50%);grid-template-columns:1fr 1fr;gap:8px;width:92vw}.panel{padding:9px 11px}.panel .v{font-size:15px}.panel .v small{font-size:11.5px}.gap .caption{bottom:auto;top:17vh}}
+@media (max-width:760px){.panels{right:auto;left:50%;top:auto;bottom:19vh;transform:translateX(-50%) !important;grid-template-columns:1fr 1fr;gap:8px;width:92vw}.panel{padding:9px 11px}.panel .v{font-size:15px}.panel .v small{font-size:11.5px}.gap .caption{max-width:80vw}}
 @media (prefers-reduced-motion:reduce){
   .hero{height:auto}.hero-stick{position:relative;height:auto;padding:120px 0 40px;display:block}
   .word{position:relative;top:auto!important;transform:none!important}
@@ -201,13 +202,25 @@ footer .legal{margin-top:40px;padding-top:20px;border-top:1px solid #3a3030;disp
 /* Machines grid */
 .mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .mcard{border:1px solid rgba(217,191,140,.35);border-radius:var(--radius);padding:18px;background:rgba(255,255,255,.03)}
-.mcard img,.mcard .mname{width:100%;aspect-ratio:4/3;object-fit:contain;background:#f3ece9;border-radius:4px}
+.mcard img{width:100%;aspect-ratio:1;object-fit:contain;background:#fff;border-radius:4px;padding:18px}
 .mcard .mname{display:grid;place-items:center;font-family:var(--display);font-size:38px;letter-spacing:.08em;color:var(--gold);background:#2c2424;border:1px solid rgba(217,191,140,.3)}
 .mcard h3{font-family:var(--display);font-size:24px;letter-spacing:.05em;margin-top:16px}
 .mcard .muse{color:#d8ccc5;font-size:15px}
 .mcard .plate{margin-top:14px}
 @media (max-width:900px){.mgrid{grid-template-columns:1fr}}
-.door-img{width:calc(100% + 2*clamp(26px,4vw,46px));max-width:none;margin:calc(-1*clamp(26px,4vw,46px)) calc(-1*clamp(26px,4vw,46px)) 26px;aspect-ratio:16/8;object-fit:cover}
 .visit-img{width:100%;aspect-ratio:16/9;object-fit:cover;object-position:50% 60%;border-radius:4px}
 .card img{aspect-ratio:4/5}
 .brides .bride-img{width:100%;max-width:380px;aspect-ratio:332/538;justify-self:center;border-radius:var(--radius);box-shadow:0 24px 50px -30px rgba(120,40,40,.55)}
+
+.rooms{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
+.rooms figure{margin:0}
+.rooms img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px}
+.rooms figcaption{font-size:13.5px;color:var(--ink-soft);margin-top:6px}
+@media (max-width:520px){
+  .top{gap:10px}
+  .top .brand span{font-size:13px;white-space:nowrap}
+  .top .brand small{font-size:8px;letter-spacing:.16em}
+  .top .brand img{width:36px;height:36px}
+  .lang button{padding:4px 8px;font-size:11.5px}
+  .rooms{grid-template-columns:1fr 1fr}
+}
