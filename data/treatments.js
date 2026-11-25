@@ -26,7 +26,7 @@ window.TREATMENTS = {
 };
 
 window.MACHINES = [
-  { id: "ulthera", name: "Ulthera", maker: "Merz Aesthetics", use_th: "ยกกระชับด้วยอัลตราซาวด์", use_en: "Ultrasound lifting", photo: "assets/machines/ulthera.jpg", serial: "UL-0000-0000", simulated_serial: true },
-  { id: "thermage", name: "Thermage FLX", maker: "Solta Medical", use_th: "กระชับผิวด้วยคลื่นวิทยุ", use_en: "Radiofrequency tightening", photo: "assets/machines/thermage-flx.jpg", serial: "TF-0000-0000", simulated_serial: true },
-  { id: "cellec-v", name: "Cellec V", maker: "Jeisys", use_th: "เลเซอร์หน้าใส 6 โหมด", use_en: "Six-mode brightening laser", photo: "assets/machines/cellec-v.jpg", serial: "CV-0000-0000", simulated_serial: true }
+  { id: "ulthera", treatment: "ulthera", name: "Ulthera", maker: "Merz Aesthetics", use_th: "ยกกระชับด้วยอัลตราซาวด์", use_en: "Ultrasound lifting", photo: "assets/machines/ulthera.jpg", serial: "UL-0000-0000", simulated_serial: true },
+  { id: "thermage", treatment: "thermage", name: "Thermage FLX", maker: "Solta Medical", use_th: "กระชับผิวด้วยคลื่นวิทยุ", use_en: "Radiofrequency tightening", photo: "assets/machines/thermage-flx.jpg", serial: "TF-0000-0000", simulated_serial: true },
+  { id: "cellec-v", treatment: "cellec-v", name: "Cellec V", maker: "Jeisys", use_th: "เลเซอร์หน้าใส 6 โหมด", use_en: "Six-mode brightening laser", photo: "assets/machines/cellec-v.jpg", serial: "CV-0000-0000", simulated_serial: true }
 ];

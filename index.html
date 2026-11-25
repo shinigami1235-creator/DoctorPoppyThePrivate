@@ -10,9 +10,10 @@
 <meta property="og:description" content="คลินิกผิวพรรณและทันตกรรม ลาดพร้าว 15 นัดหมายล่วงหน้าทาง LINE">
 <meta property="og:image" content="assets/og.jpg">
 <meta name="theme-color" content="#E85F5C">
-<link rel="icon" href="assets/logo-mark.svg?v=20261125e" type="image/svg+xml">
+<link rel="icon" href="assets/logo-mark.svg?v=20261125g" type="image/svg+xml">
 <link rel="preload" href="fonts/cinzel-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/site.css?v=20261125e">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="css/site.css?v=20261125g">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"MedicalClinic","name":"Doctor Poppy The Private Clinic","alternateName":"ด๊อกเตอร์ป๊อปปี้เดอะไปรเวทสหคลินิก","telephone":"+66918746952","address":{"@type":"PostalAddress","streetAddress":"21 Golden Gate House, 153 Lat Phrao 15 Alley","addressLocality":"Chatuchak","addressRegion":"Bangkok","postalCode":"10900","addressCountry":"TH"},"medicalSpecialty":["Dermatology","Dentistry"],"sameAs":["https://www.instagram.com/doctorpoppytheprivate/","https://www.facebook.com/doctorpoppytheprivate/"],"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Tuesday","Wednesday","Thursday","Friday"],"opens":"10:00","closes":"19:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"09:00","closes":"13:00"}]}
 </script>
@@ -20,9 +21,8 @@
 <body>
 
 <header class="top" id="top">
-  <a class="brand" href="./"><img src="assets/logo-mark.svg?v=20261125e" alt="" width="42" height="42"><span>DOCTOR POPPY<small>THE PRIVATE CLINIC</small></span></a>
-  <button class="menu-btn" aria-expanded="false" aria-controls="nav"><span aria-hidden="true">☰</span><span class="sr" data-i18n="menu">เมนู</span></button>
-  <nav id="nav">
+  <a class="brand" href="./"><img src="assets/logo-mark.svg?v=20261125g" alt="" width="42" height="42"><span>DOCTOR POPPY<small>THE PRIVATE CLINIC</small></span></a>
+  <nav id="nav" aria-label="Main">
     <a href="#guests" data-i18n="nav.guests">สมุดเยี่ยม</a>
     <a href="#doctor" data-i18n="nav.doctor">คุณหมอป๊อปปี้</a>
     <a href="#treatments" data-i18n="nav.treatments">ทรีตเมนต์และราคา</a>
@@ -30,9 +30,25 @@
     <a href="#brides" data-i18n="nav.brides">เจ้าสาว</a>
     <a href="#visit" data-i18n="nav.visit">การเดินทาง</a>
   </nav>
-  <div class="lang" role="group" aria-label="Language"><button data-lang="th" aria-pressed="true">TH</button><button data-lang="en" aria-pressed="false">EN</button></div>
+  <div class="lang" role="group" aria-label="Language"><button data-lang="th" aria-pressed="true">TH</button><span aria-hidden="true">/</span><button data-lang="en" aria-pressed="false">EN</button></div>
   <a class="btn-line" href="https://lin.ee/mCqmXqk" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11c0 3.9 3.6 7.2 8.4 7.9.3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.5s6-3.5 8.2-6C21.4 14.2 22 12.7 22 11c0-4.4-4.5-8-10-8Z"/></svg><span data-i18n="line">จองทาง LINE</span></a>
+  <button class="menu-btn" aria-expanded="false" aria-controls="sheet"><span class="bars" aria-hidden="true"></span><span class="sr" data-i18n="menu">เมนู</span></button>
 </header>
+
+<div class="sheet" id="sheet" hidden>
+  <nav class="sheet-nav" aria-label="Menu">
+    <a href="#guests"><i>01</i><span data-i18n="nav.guests">สมุดเยี่ยม</span></a>
+    <a href="#doctor"><i>02</i><span data-i18n="nav.doctor">คุณหมอป๊อปปี้</span></a>
+    <a href="#treatments"><i>03</i><span data-i18n="nav.treatments">ทรีตเมนต์และราคา</span></a>
+    <a href="#machines"><i>04</i><span data-i18n="nav.machines">เครื่องมือ</span></a>
+    <a href="#brides"><i>05</i><span data-i18n="nav.brides">เจ้าสาว</span></a>
+    <a href="#visit"><i>06</i><span data-i18n="nav.visit">การเดินทาง</span></a>
+  </nav>
+  <div class="sheet-foot">
+    <p data-i18n="sheet.hours">อังคาร ถึง ศุกร์ 10:00 ถึง 19:00 · เสาร์ 09:00 ถึง 13:00</p>
+    <div class="btns"><a class="btn-line" href="https://lin.ee/mCqmXqk" target="_blank" rel="noopener"><span data-i18n="line">จองทาง LINE</span></a><a class="btn-ghost" href="tel:+66918746952">091-874-6952</a></div>
+  </div>
+</div>
 
 <main>
   <section class="hero" aria-label="Doctor Poppy">
@@ -54,46 +70,56 @@
   <div class="wall" aria-hidden="true"><p>DOCTOR POPPY · THE PRIVATE CLINIC</p></div>
 
   <section class="guests" id="guests">
-    <div class="marquee-head">
-      <div><h2 data-i18n="guests.h">สมุดเยี่ยม</h2><p class="lead" data-i18n="guests.lead">แขกทุกท่านถ่ายรูปที่ผนังหินอ่อนหน้าห้องตรวจ เรียงตามวันที่มา</p></div>
-      <a class="more" href="guestbook.html" data-i18n="guests.more">ดูแขกทั้งหมด</a>
+    <div class="tl-stick">
+      <div class="tl-head reveal">
+        <div><h2 data-i18n="guests.h">สมุดเยี่ยม</h2><p class="lead" id="guestSummary"></p></div>
+        <a class="more" href="guestbook.html" data-i18n="guests.more">ดูแขกทั้งหมด</a>
+      </div>
+      <div class="tl-view"><ol class="tl" id="guestStrip"></ol></div>
+      <div class="tl-progress" aria-hidden="true"><span id="tlBar"></span></div>
     </div>
-    <div class="strip" id="guestStrip"></div>
   </section>
 
-  <section id="doctor">
-    <div class="doctor">
-      <figure><img src="assets/doctor/poppy.jpg" alt="Dr. Poppy Sangganjanavanich" width="800" height="1000" loading="lazy"><figcaption data-i18n="doctor.cap">ผู้ก่อตั้งคลินิก</figcaption></figure>
-      <div>
-        <h2 data-i18n="doctor.h">คุณหมอป๊อปปี้</h2>
-        <p class="kicker" style="margin-top:6px">Dr. Poppy Sangganjanavanich</p>
-        <p class="lead" data-i18n="doctor.lead">คุณหมอดูแลคนไข้ทุกคนด้วยตัวเอง ตั้งแต่ปรึกษาจนทำเสร็จ คลินิกรับเฉพาะนัดหมายล่วงหน้า ห้องตรวจจึงมีคนไข้ทีละคน</p>
-        <dl class="facts">
+  <section id="doctor" class="doc">
+    <div class="doc-grid">
+      <figure class="doc-photo reveal"><img src="assets/doctor/poppy.jpg" alt="Dr. Poppy Sangganjanavanich" width="620" height="742" loading="lazy"></figure>
+      <div class="doc-text">
+        <p class="doc-name reveal"><span data-i18n="doctor.h">คุณหมอป๊อปปี้</span><small>Dr. Poppy Sangganjanavanich</small></p>
+        <p class="lead reveal" data-i18n="doctor.lead"></p>
+        <ul class="stats reveal">
+          <li><b data-count="42.4" data-dec="1" data-suffix="K">0</b><span data-i18n="doctor.s1">ผู้ติดตามบน @doraepop</span></li>
+          <li><b data-count="5.0" data-dec="1">0</b><span data-i18n="doctor.s2">คะแนนรีวิวบน GoWabi</span></li>
+          <li><b id="docGuests" data-count="0">0</b><span data-i18n="doctor.s3">แขกในสมุดเยี่ยม</span></li>
+        </ul>
+        <dl class="facts reveal">
+          <div><dt data-i18n="doctor.md">แพทยศาสตรบัณฑิต</dt><dd data-i18n="doctor.md.v"></dd></div>
+          <div><dt data-i18n="doctor.derm">ตจวิทยาเพื่อความงาม</dt><dd data-i18n="doctor.derm.v"></dd></div>
           <div><dt data-i18n="doctor.licence">เลขที่ใบประกอบวิชาชีพ</dt><dd>ว.00000</dd></div>
-          <div><dt data-i18n="doctor.md">แพทยศาสตรบัณฑิต</dt><dd data-i18n="doctor.md.v">มหาวิทยาลัยรังสิต รุ่น 21</dd></div>
-          <div><dt data-i18n="doctor.derm">ตจวิทยาเพื่อความงาม</dt><dd data-i18n="doctor.derm.v">มหาวิทยาลัยธรรมศาสตร์ รุ่น 4</dd></div>
-          <div><dt>Instagram</dt><dd><a href="https://www.instagram.com/doraepop/" target="_blank" rel="noopener">@doraepop</a></dd></div>
         </dl>
+        <div class="with reveal"><p data-i18n="doctor.with">กับแขกของคลินิก</p><div class="with-row" id="withRow"></div></div>
       </div>
     </div>
   </section>
 
   <section id="treatments" style="padding-top:0">
-    <div class="marquee-head"><div><h2 data-i18n="tr.h">ทรีตเมนต์และราคา</h2><p class="lead" data-i18n="tr.lead">จองได้ทุกรายการทาง LINE @drpoppytheprivate</p></div></div>
-    <div class="doors">
+    <div class="marquee-head reveal"><div><h2 data-i18n="tr.h">ทรีตเมนต์และราคา</h2><p class="lead" data-i18n="tr.lead">จองได้ทุกรายการทาง LINE @drpoppytheprivate</p></div></div>
+    <div class="doors reveal">
       <div class="door"><h3 data-i18n="tr.skin">ผิวพรรณ</h3><p class="tag" data-i18n="tr.skin.tag">โดยคุณหมอป๊อปปี้</p><ul class="price-list" id="skinList"></ul></div>
       <div class="door"><h3 data-i18n="tr.dental">ทันตกรรม</h3><p class="tag" data-i18n="tr.dental.tag">โดยทันตแพทย์ประจำคลินิก</p><ul class="price-list" id="dentalList"></ul></div>
     </div>
   </section>
 
   <section class="machines" id="machines">
-    <div class="marquee-head"><div><h2 data-i18n="mc.h">เครื่องมือ</h2><p class="lead" data-i18n="mc.lead"></p></div></div>
-    <div class="mgrid" id="machineList"></div>
+    <div class="mc-head reveal"><h2 data-i18n="mc.h">เครื่องมือ</h2><p class="lead" data-i18n="mc.lead"></p></div>
+    <div class="showroom reveal">
+      <div class="mc-tabs" role="tablist" id="mcTabs" aria-label="Machines"></div>
+      <div class="stage" id="mcStage" role="tabpanel"></div>
+    </div>
   </section>
 
   <section class="brides" id="brides">
-    <img class="bride-img" src="assets/brides/bride-2026.jpg" alt="" width="332" height="538" loading="lazy">
-    <div>
+    <img class="bride-img reveal" src="assets/brides/bride-2026.jpg" alt="" width="332" height="538" loading="lazy">
+    <div class="reveal">
       <h2 data-i18n="br.h">เจ้าสาว</h2>
       <p class="lead" data-i18n="br.lead">เตรียมผิวและรอยยิ้มก่อนวันแต่งงาน นัดตามวันงานของคุณ</p>
       <ul class="price-list" id="brideList" style="margin-top:26px"></ul>
@@ -101,7 +127,7 @@
   </section>
 
   <section id="visit">
-    <div class="visit">
+    <div class="visit reveal">
       <div>
         <h2 data-i18n="vi.h">การเดินทาง</h2>
         <dl>
@@ -131,10 +157,16 @@
   </section>
 </main>
 
+<dialog class="lb" id="lb">
+  <button class="lb-x" id="lbClose" aria-label="Close">×</button>
+  <img id="lbImg" alt="">
+  <div class="lb-cap"><b id="lbName"></b><span id="lbDate"></span><a id="lbSrc" target="_blank" rel="noopener" data-i18n="lb.src">ดูโพสต์ต้นฉบับบน Instagram</a></div>
+</dialog>
+
 <footer>
   <div class="cols">
     <div>
-      <img src="assets/logo.svg?v=20261125e" alt="Doctor Poppy The Private Clinic" width="64" height="64">
+      <img src="assets/logo.svg?v=20261125g" alt="Doctor Poppy The Private Clinic" width="64" height="64">
       <p data-i18n="ft.name">ด๊อกเตอร์ป๊อปปี้เดอะไปรเวทสหคลินิก</p>
       <p data-i18n="vi.addr.v"></p>
       <p data-i18n="ft.licence"></p>
@@ -159,9 +191,9 @@
 
 <a class="btn-line float-line" href="https://lin.ee/mCqmXqk" target="_blank" rel="noopener"><span data-i18n="line">จองทาง LINE</span></a>
 
-<script src="js/i18n.js?v=20261125e"></script>
-<script src="data/guests.js?v=20261125e"></script>
-<script src="data/treatments.js?v=20261125e"></script>
-<script src="js/site.js?v=20261125e"></script>
+<script src="js/i18n.js?v=20261125g"></script>
+<script src="data/guests.js?v=20261125g"></script>
+<script src="data/treatments.js?v=20261125g"></script>
+<script src="js/site.js?v=20261125g"></script>
 </body>
 </html>
