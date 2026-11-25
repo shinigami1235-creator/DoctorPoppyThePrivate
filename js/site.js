@@ -314,6 +314,24 @@
   if (menuBtn) menuBtn.addEventListener("click", () => setMenu(menuBtn.getAttribute("aria-expanded") !== "true"));
   $$(".sheet a").forEach(a => a.addEventListener("click", () => setMenu(false)));
   addEventListener("keydown", e => { if (e.key === "Escape" && document.body.classList.contains("menu-open")) setMenu(false); });
+  if (sheet) sheet.addEventListener("click", e => { if (e.target === sheet) setMenu(false); });
+  // desktop: the left page shows the chapter you point at
+  const tocPv = $("#tocPv");
+  if (tocPv) $$(".sheet-nav a").forEach(a => {
+    const show = () => {
+      const img = a.querySelector("img"), pic = tocPv.querySelector("img");
+      if (pic.getAttribute("src") === img.getAttribute("src")) return;
+      tocPv.classList.add("swap");
+      setTimeout(() => {
+        pic.src = img.getAttribute("src");
+        tocPv.classList.toggle("cream", img.classList.contains("on-cream"));
+        const cap = tocPv.querySelector("figcaption"), key = a.querySelector("span").dataset.i18n;
+        cap.dataset.i18n = key; cap.textContent = t(key);
+        tocPv.classList.remove("swap");
+      }, 140);
+    };
+    a.addEventListener("mouseenter", show); a.addEventListener("focus", show);
+  });
 
   // ---------- Header: hide on scroll down, show on scroll up; active section ----------
   let lastY = scrollY;
