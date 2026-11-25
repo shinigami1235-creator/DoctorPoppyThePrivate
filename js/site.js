@@ -302,7 +302,7 @@
     menuBtn.setAttribute("aria-expanded", open);
     document.body.classList.toggle("menu-open", open);
     if (open) { sheet.hidden = false; requestAnimationFrame(() => sheet.classList.add("open")); }
-    else { sheet.classList.remove("open"); setTimeout(() => { if (!sheet.classList.contains("open")) sheet.hidden = true; }, reduce ? 0 : 320); }
+    else { sheet.classList.remove("open"); setTimeout(() => { if (!sheet.classList.contains("open")) sheet.hidden = true; }, reduce ? 0 : 760); }
   }
   if (menuBtn) menuBtn.addEventListener("click", () => setMenu(menuBtn.getAttribute("aria-expanded") !== "true"));
   $$(".sheet a").forEach(a => a.addEventListener("click", () => setMenu(false)));
@@ -321,7 +321,7 @@
   addEventListener("resize", () => { heroFrame(); if (single() !== wasSingle) { wasSingle = single(); spread = 0; book3d(); $$(".snap", gbook || document).forEach(s => s.classList.remove("wait")); } });
 
   if ("IntersectionObserver" in window) {
-    const links = $$("#nav a");
+    const links = $$("#nav a, .sheet-nav a");
     const spy = new IntersectionObserver(entries => entries.forEach(en => {
       if (en.isIntersecting) links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id));
     }), { rootMargin: "-45% 0px -50% 0px" });
