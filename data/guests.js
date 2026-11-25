@@ -3,6 +3,7 @@
 // name_checked: false where Gid identified the guest but is not sure. Confirm with her at turnover.
 // photo: file in assets/guests. focus: the part of the photo to keep when a card crops it.
 // source: the Instagram post the photo came from.
+// shape: "wide" for landscape photos, so the book shows them in a landscape frame.
 // with_doctor: Dr. Poppy is in the photo, so it can show in her section.
 // permission: false until the guest or their management agrees in writing (see PLAN.md, At turnover).
 window.GUESTS = [
@@ -12,8 +13,8 @@ window.GUESTS = [
   { id: "gemini-norawit", with_doctor: true, name_en: "Gemini Norawit", name_th: "เจมีไนน์ นรวิชญ์", date: "2026-03", photo: "assets/guests/gemini-norawit.jpg", focus: "60% 35%", source: "https://www.instagram.com/p/DVgUnQYj3k5/", permission: false },
   { id: "junior-kanokpob", with_doctor: true, name_en: "Junior Kanokpob", name_th: "จูเนียร์ กนกพบ", date: "2025-08", photo: "assets/guests/junior-kanokpob.jpg", focus: "62% 35%", source: "https://www.instagram.com/p/DN2rKZd3tn_/", permission: false },
   { id: "ohm-tpk", with_doctor: true, name_en: "Ohm TPK", name_th: "โอม TPK", name_checked: false, date: "2025-05", photo: "assets/guests/ohm-tpk.jpg", focus: "45% 30%", source: "https://www.instagram.com/p/DKRTJr5PmuF/", permission: false },
-  { id: "book-kasidet", name_en: "Book Kasidet", name_th: "บุ๊ค กษิดิ์เดช", name_checked: false, date: "2025-01", photo: "assets/guests/book-kasidet.jpg", focus: "50% 50%", source: "https://www.instagram.com/p/DE2JZacyY_M/", permission: false },
-  { id: "sea-tawinan-2025", name_en: "Sea Tawinan", name_th: "ซี ฐวิณัณ", date: "2025-01", photo: "assets/guests/sea-tawinan-2025.jpg", focus: "45% 50%", source: "https://www.instagram.com/p/DE2JielSx7I/", permission: false },
-  { id: "sea-tawinan-2023", with_doctor: true, name_en: "Sea Tawinan", name_th: "ซี ฐวิณัณ", date: "2023-05", photo: "assets/guests/sea-tawinan-2023.jpg", focus: "42% 50%", source: "https://www.instagram.com/p/Cr02KQprtt-/", permission: false },
-  { id: "jimmy-jitaraphol", name_en: "Jimmy Jitaraphol", name_th: "จิมมี่ จิตรพล", date: "2023-05", photo: "assets/guests/jimmy-jitaraphol.jpg", focus: "48% 50%", source: "https://www.instagram.com/p/Crz5CekLZWd/", permission: false }
+  { id: "book-kasidet", shape: "wide", name_en: "Book Kasidet", name_th: "บุ๊ค กษิดิ์เดช", name_checked: false, date: "2025-01", photo: "assets/guests/book-kasidet.jpg", focus: "50% 50%", source: "https://www.instagram.com/p/DE2JZacyY_M/", permission: false },
+  { id: "sea-tawinan-2025", shape: "wide", name_en: "Sea Tawinan", name_th: "ซี ฐวิณัณ", date: "2025-01", photo: "assets/guests/sea-tawinan-2025.jpg", focus: "45% 50%", source: "https://www.instagram.com/p/DE2JielSx7I/", permission: false },
+  { id: "sea-tawinan-2023", shape: "wide", with_doctor: true, name_en: "Sea Tawinan", name_th: "ซี ฐวิณัณ", date: "2023-05", photo: "assets/guests/sea-tawinan-2023.jpg", focus: "42% 50%", source: "https://www.instagram.com/p/Cr02KQprtt-/", permission: false },
+  { id: "jimmy-jitaraphol", shape: "wide", name_en: "Jimmy Jitaraphol", name_th: "จิมมี่ จิตรพล", date: "2023-05", photo: "assets/guests/jimmy-jitaraphol.jpg", focus: "48% 50%", source: "https://www.instagram.com/p/Crz5CekLZWd/", permission: false }
 ];

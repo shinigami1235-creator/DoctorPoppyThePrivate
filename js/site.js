@@ -26,43 +26,100 @@
   const name = g => (lang === "th" ? g.name_th : g.name_en) || g.name_en || t("guest");
   const visitLine = g => g.visits > 1 ? ` · ${t("visitNo").replace("{k}", g.visitNo)}` : "";
 
-  // ---------- Guest book: timeline on the home page ----------
+  // ---------- Guest book: a book whose photos drop onto the pages ----------
   function guestCard(g, tag = "li") {
     return `<${tag} class="tl-card"><button type="button" data-guest="${esc(g.id)}">
-      <span class="ph"><img src="${esc(g.photo)}" alt="${esc(name(g))}" loading="lazy" width="400" height="533" style="object-position:${esc(g.focus || "50% 50%")}"></span>
+      <span class="ph${g.shape === "wide" ? " wide" : ""}"><img src="${esc(g.photo)}" alt="${esc(name(g))}" loading="lazy" style="object-position:${esc(g.focus || "50% 50%")}"></span>
       <b>${esc(name(g))}</b><span class="d">${month(g.date)}${visitLine(g)}</span></button></${tag}>`;
   }
-  function timeline() {
-    const ol = $("#guestStrip"); if (!ol) return;
-    let html = "", last = "";
-    guests.forEach(g => {
-      const y = g.date.slice(0, 4);
-      if (y !== last) { html += `<li class="tl-year" aria-hidden="true"><span>${year(y)}</span></li>`; last = y; }
-      html += guestCard(g);
+  // Pages: a title page, then two photos per page, each year starting a new page
+  function bookPages() {
+    const pages = [{ type: "title" }];
+    const years = [...new Set(guests.map(g => g.date.slice(0, 4)))];
+    years.forEach(y => {
+      const list = guests.filter(g => g.date.startsWith(y));
+      for (let i = 0; i < list.length; i += 2) pages.push({ type: "photos", year: y, list: list.slice(i, i + 2) });
     });
-    ol.innerHTML = html;
+    if (pages.length % 2) pages.push({ type: "blank" });
+    return pages;
+  }
+  const TILT = [-4, 3, -2, 5, -3, 2];
+  function pageHTML(pg, n, withSnaps = true) {
+    if (!pg) return "";
+    if (pg.type === "title") {
+      const first = guests[guests.length - 1], last = guests[0];
+      return `<div class="pg-title"><img src="assets/logo-mark.svg" alt="" width="84" height="84">
+        <h3>${esc(t("guests.h"))}</h3><p class="hand">${esc(t("bk.sub"))}</p>
+        <p class="hand sm">${esc(t("bk.count").replace("{n}", people().length).replace("{from}", year(first.date.slice(0, 4))).replace("{to}", year(last.date.slice(0, 4))))}</p>
+        <p class="pg-hint">${esc(t("bk.hint"))}</p></div><span class="pg-no">${n}</span>`;
+    }
+    if (pg.type === "blank") return `<span class="pg-no">${n}</span>`;
+    const snaps = withSnaps ? pg.list.map((g, i) => {
+      const r = TILT[(n * 2 + i) % TILT.length];
+      return `<figure class="snap s${i}${g.shape === "wide" ? " wide" : ""}" style="--r:${r}deg;--d:${i * 160}ms">
+        <button type="button" data-guest="${esc(g.id)}"><span class="tape${(n + i) % 2 ? " gold" : ""}"></span>
+        <img src="${esc(g.photo)}" alt="${esc(name(g))}" style="object-position:${esc(g.focus || "50% 40%")}">
+        <figcaption class="hand">${esc(name(g))}<small>${month(g.date)}${visitLine(g)}</small></figcaption></button></figure>`;
+    }).join("") : "";
+    return `<p class="pg-year hand">${year(pg.year)}</p>${snaps}<span class="pg-no">${n}</span>`;
+  }
+  const gbook = $("#gbook");
+  let pages = [], spread = 0, turning = false, dropped = false;
+  const single = () => innerWidth <= 760;
+  const perView = () => single() ? 1 : 2;
+  const views = () => Math.ceil(pages.length / perView());
+  function drawBook(drop) {
+    if (!gbook) return;
+    const pv = perView(), i = spread * pv;
+    gbook.classList.toggle("single", pv === 1);
+    $("#pgL").innerHTML = pageHTML(pages[i], i + 1);
+    $("#pgR").innerHTML = pv === 2 ? pageHTML(pages[i + 1], i + 2) : "";
+    if (drop) $$(".snap", gbook).forEach(s => s.classList.add("drop"));
+    $("#bkCount").textContent = `${spread + 1} / ${views()}`;
+    $("#bkPrev").disabled = spread === 0;
+    $("#bkNext").disabled = spread >= views() - 1;
+  }
+  function book3d() {
+    if (!gbook) return;
+    pages = bookPages();
+    spread = Math.min(spread, views() - 1);
+    drawBook(false);
+    if (!dropped) $$(".snap", gbook).forEach(s => s.classList.add("wait"));
     const sum = $("#guestSummary");
     if (sum) sum.textContent = t("guests.sum").replace("{n}", people().length).replace("{from}", year(guests[guests.length - 1].date.slice(0, 4)));
-    sizeTimeline();
   }
-  const guestSec = $(".guests");
-  let tlTravel = 0;
-  const pinned = () => innerWidth > 900 && !reduce;
-  function sizeTimeline() {
-    if (!guestSec) return;
-    const ol = $("#guestStrip"), view = $(".tl-view");
-    if (!pinned()) { guestSec.style.height = ""; ol.style.transform = ""; return; }
-    const cs = getComputedStyle(view);
-    tlTravel = Math.max(0, ol.scrollWidth - (view.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)));
-    guestSec.style.height = (innerHeight + tlTravel) + "px";
-    tlFrame();
+  function turn(dir) {
+    if (!gbook || turning) return;
+    const next = spread + dir;
+    if (next < 0 || next >= views()) return;
+    const pv = perView();
+    if (reduce) { spread = next; drawBook(false); return; }
+    turning = true;
+    const oldL = $("#pgL").innerHTML, oldR = $("#pgR").innerHTML;
+    const ni = next * pv;
+    const newL = pageHTML(pages[ni], ni + 1, false), newR = pv === 2 ? pageHTML(pages[ni + 1], ni + 2, false) : "";
+    const flip = document.createElement("div");
+    flip.className = "flipper " + (pv === 1 ? "full" : dir > 0 ? "on-right" : "on-left");
+    let front, back;
+    if (pv === 1) { front = oldL; back = ""; $("#pgL").innerHTML = newL; }
+    else if (dir > 0) { front = oldR; back = newL; $("#pgR").innerHTML = newR; }
+    else { front = oldL; back = newR; $("#pgL").innerHTML = newL; }
+    flip.innerHTML = `<div class="face front page ${pv === 1 ? "left" : dir > 0 ? "right" : "left"}">${front}</div><div class="face back page ${pv === 1 ? "left" : dir > 0 ? "left" : "right"}">${back}</div>`;
+    gbook.appendChild(flip);
+    requestAnimationFrame(() => requestAnimationFrame(() => flip.classList.add(dir > 0 || pv === 1 ? "go-next" : "go-prev")));
+    setTimeout(() => { flip.remove(); spread = next; drawBook(true); turning = false; }, 760);
   }
-  function tlFrame() {
-    if (!guestSec || !pinned()) return;
-    const r = guestSec.getBoundingClientRect();
-    const p = Math.min(1, Math.max(0, -r.top / (guestSec.offsetHeight - innerHeight || 1)));
-    $("#guestStrip").style.transform = `translateX(${-p * tlTravel}px)`;
-    const bar = $("#tlBar"); if (bar) bar.style.transform = `scaleX(${p})`;
+  if (gbook) {
+    $("#bkPrev").addEventListener("click", () => turn(-1));
+    $("#bkNext").addEventListener("click", () => turn(1));
+    gbook.addEventListener("keydown", e => { if (e.key === "ArrowRight") { e.preventDefault(); turn(1); } if (e.key === "ArrowLeft") { e.preventDefault(); turn(-1); } });
+    let sx = null, sy = null;
+    gbook.addEventListener("pointerdown", e => { sx = e.clientX; sy = e.clientY; });
+    gbook.addEventListener("pointerup", e => {
+      if (sx === null) return;
+      const dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) turn(dx < 0 ? 1 : -1);
+    });
   }
 
   // Guest book page: years with big numerals
@@ -96,8 +153,8 @@
   // ---------- Dr. Poppy ----------
   function doctor() {
     const row = $("#withRow");
-    if (row) row.innerHTML = guests.filter(g => g.with_doctor).slice(0, 6).map(g =>
-      `<button type="button" data-guest="${esc(g.id)}" title="${esc(name(g))}"><img src="${esc(g.photo)}" alt="${esc(name(g))}" loading="lazy" style="object-position:${esc(g.focus || "50% 40%")}"></button>`).join("");
+    if (row) row.innerHTML = guests.filter(g => g.with_doctor).slice(0, 5).map((g, i) =>
+      `<button type="button" data-guest="${esc(g.id)}" title="${esc(name(g))}" style="--r:${TILT[i % TILT.length]}deg"><img src="${esc(g.photo)}" alt="${esc(name(g))}" loading="lazy" style="object-position:${esc(g.focus || "50% 40%")}"><span class="hand">${esc(name(g))}</span></button>`).join("");
     const n = $("#docGuests"); if (n) n.dataset.count = people().length;
   }
   function countUp(el) {
@@ -160,7 +217,7 @@
   // ---------- Hero ----------
   let slideTimer;
   function slides() {
-    const gap = $("#gap"); if (!gap) return;
+    const gap = $("#slides"); if (!gap) return;
     $$(".slide", gap).forEach(s => s.remove());
     const list = guests.slice(0, 8);
     list.forEach((g, i) => {
@@ -193,6 +250,7 @@
     const topIn = (vh / 2) + ((topRoom + H * s + gapPad) - vh / 2) * e;
     const botIn = (vh / 2) + ((botRoom + H * s + gapPad) - vh / 2) * e;
     gap.style.clipPath = `inset(${topIn}px 0 ${botIn}px 0 round 6px)`;
+    const sl = $("#slides"); if (sl) { sl.style.top = topIn + "px"; sl.style.bottom = botIn + "px"; }
     if (cap) {
       if (innerWidth > 760) { cap.style.bottom = (botIn + 22) + "px"; cap.style.top = "auto"; }
       else { cap.style.top = (topIn + 14) + "px"; cap.style.bottom = "auto"; }
@@ -210,13 +268,14 @@
     document.documentElement.lang = lang;
     $$("[data-i18n]").forEach(el => { const v = t(el.dataset.i18n); if (v) el.textContent = v; });
     $$("[data-i18n-html]").forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+    $$("[data-i18n-aria]").forEach(el => el.setAttribute("aria-label", t(el.dataset.i18nAria)));
     $$(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
     const count = $("#guestCount"); if (count) count.textContent = people().length;
     const T = window.TREATMENTS || {};
     if ($("#skinList")) $("#skinList").innerHTML = (T.skin || []).map(priceItem).join("");
     if ($("#dentalList")) $("#dentalList").innerHTML = (T.dental || []).map(priceItem).join("");
     if ($("#brideList")) $("#brideList").innerHTML = (T.bridal || []).map(priceItem).join("");
-    timeline(); doctor(); machines(); hours(); book(); slides();
+    book3d(); doctor(); machines(); hours(); book(); slides();
     $$(".stats b").forEach(b => { if (b.dataset.done) b.textContent = (+b.dataset.count).toFixed(+(b.dataset.dec || 0)) + (b.dataset.suffix || ""); });
   }
 
@@ -253,9 +312,10 @@
     const y = scrollY;
     if (top && !document.body.classList.contains("menu-open")) top.classList.toggle("hide", y > lastY && y > 120);
     lastY = y;
-    requestAnimationFrame(() => { heroFrame(); tlFrame(); });
+    requestAnimationFrame(heroFrame);
   }, { passive: true });
-  addEventListener("resize", () => { heroFrame(); sizeTimeline(); });
+  let wasSingle = single();
+  addEventListener("resize", () => { heroFrame(); if (single() !== wasSingle) { wasSingle = single(); spread = 0; book3d(); $$(".snap", gbook || document).forEach(s => s.classList.remove("wait")); } });
 
   if ("IntersectionObserver" in window) {
     const links = $$("#nav a");
@@ -267,14 +327,29 @@
     const seen = new IntersectionObserver(entries => entries.forEach(en => {
       if (!en.isIntersecting) return;
       en.target.classList.add("in");
+      if (en.target.classList.contains("book-wrap") && !dropped) { dropped = true; $$(".snap", gbook).forEach(s => { s.classList.remove("wait"); s.classList.add("drop"); }); }
       $$("[data-count]", en.target).forEach(b => { if (!b.dataset.done) { b.dataset.done = 1; countUp(b); } });
       seen.unobserve(en.target);
     }), { rootMargin: "0px 0px -12% 0px" });
     $$(".reveal").forEach(el => seen.observe(el));
   } else {
+    dropped = true;
     $$(".reveal").forEach(el => el.classList.add("in"));
   }
 
+  const pv = $("#navPv");
+  if (pv) $$("#nav a[data-pv]").forEach(a => {
+    const show = () => {
+      pv.querySelector("img").src = a.dataset.pv;
+      pv.classList.toggle("cream", a.dataset.pv.endsWith(".png"));
+      pv.querySelector("span").textContent = a.textContent;
+      const r = a.getBoundingClientRect();
+      pv.style.left = (r.left + r.width / 2) + "px";
+      pv.classList.add("on");
+    };
+    a.addEventListener("mouseenter", show); a.addEventListener("focus", show);
+    a.addEventListener("mouseleave", () => pv.classList.remove("on")); a.addEventListener("blur", () => pv.classList.remove("on"));
+  });
+
   render(); heroFrame();
-  addEventListener("load", sizeTimeline);
 })();

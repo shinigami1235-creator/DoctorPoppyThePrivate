@@ -1,6 +1,12 @@
 // Interface text in Thai and English. Thai is the default.
 window.I18N = {
   th: {
+    "bk.hint": "ปัดหรือกดลูกศรเพื่อเปิดหน้า",
+    "bk.count": "แขก {n} ท่าน · {from} ถึง {to}",
+    "bk.sub": "ด๊อกเตอร์ป๊อปปี้ เดอะไปรเวทคลินิก",
+    "doctor.licence.v": "ว.00000",
+    "next": "หน้าถัดไป",
+    "prev": "หน้าก่อนหน้า",
     "close": "ปิด",
     "lb.src": "ดูโพสต์ต้นฉบับบน Instagram",
     "sheet.hours": "อังคาร ถึง ศุกร์ 10:00 ถึง 19:00 · เสาร์ 09:00 ถึง 13:00",
@@ -82,6 +88,12 @@ window.I18N = {
     "gb.lead": "ทุกการมาเยือน เรียงจากล่าสุด"
   },
   en: {
+    "bk.hint": "Swipe or use the arrows to turn the page",
+    "bk.count": "{n} guests · {from} to {to}",
+    "bk.sub": "Doctor Poppy The Private Clinic",
+    "doctor.licence.v": "No. 00000",
+    "next": "Next page",
+    "prev": "Previous page",
     "close": "Close",
     "lb.src": "See the Instagram post",
     "sheet.hours": "Tuesday to Friday 10:00 to 19:00 · Saturday 09:00 to 13:00",
