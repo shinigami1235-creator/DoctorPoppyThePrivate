@@ -15,8 +15,15 @@
   const name = g => (lang === "th" ? g.name_th : g.name_en) || g.name_en || t("guest");
   const spark = '<svg class="spark" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l2.4 7.6L20 10l-7.6 2.4L10 20l-2.4-7.6L0 10l7.6-2.4z"/></svg>';
 
+  // One entry per person, using the latest visit, with how many times they came
+  function people() {
+    const seen = new Map();
+    guests.forEach(g => { const k = g.name_en || g.id; if (seen.has(k)) seen.get(k).visits++; else seen.set(k, { ...g, visits: 1 }); });
+    return [...seen.values()];
+  }
+
   function guestCard(g) {
-    return `<article class="card">${spark}<img src="${g.photo}" alt="${name(g)}" width="400" height="500" loading="lazy" style="object-position:${g.focus || "50% 50%"}"><div class="n">${name(g)}</div><div class="d">${month(g.date)}</div></article>`;
+    return `<article class="card">${spark}<img src="${g.photo}" alt="${name(g)}" width="400" height="500" loading="lazy" style="object-position:${g.focus || "50% 50%"}"><div class="n">${name(g)}</div><div class="d">${month(g.date)}${g.visits > 1 ? ` · ${t("visits").replace("{n}", g.visits)}` : ""}</div></article>`;
   }
 
   function priceItem(x) {
@@ -52,8 +59,8 @@
     $$("[data-i18n]").forEach(el => { const v = t(el.dataset.i18n); if (v) el.textContent = v; });
     $$("[data-i18n-html]").forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
     $$(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
-    const strip = $("#guestStrip"); if (strip) strip.innerHTML = guests.slice(0, 10).map(guestCard).join("");
-    const count = $("#guestCount"); if (count) count.textContent = guests.length;
+    const strip = $("#guestStrip"); if (strip) strip.innerHTML = people().slice(0, 10).map(guestCard).join("");
+    const count = $("#guestCount"); if (count) count.textContent = people().length;
     const T = window.TREATMENTS || {};
     if ($("#skinList")) $("#skinList").innerHTML = (T.skin || []).map(priceItem).join("");
     if ($("#dentalList")) $("#dentalList").innerHTML = (T.dental || []).map(priceItem).join("");
@@ -80,7 +87,7 @@
   function slides() {
     const gap = $("#gap"); if (!gap) return;
     $$(".slide", gap).forEach(s => s.remove());
-    const list = [...guests.filter(g => g.name_en), ...guests.filter(g => !g.name_en)].slice(0, 8);
+    const list = guests.slice(0, 8);
     list.forEach((g, i) => {
       const d = document.createElement("div");
       d.className = "slide" + (i === 0 ? " on" : ""); d.dataset.i = i;
