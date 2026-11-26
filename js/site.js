@@ -257,8 +257,10 @@
     const scale = 1 - (1 - s) * e;
     w1.style.transform = `translateY(${(topRoom - w1.offsetTop) * e}px) scale(${scale})`;
     w2.style.transform = `translateY(${((vh - botRoom) - (w2.offsetTop + w2.offsetHeight)) * e}px) scale(${scale})`;
-    const topIn = (vh / 2) + ((topRoom + H * s + gapPad) - vh / 2) * e;
-    const botIn = (vh / 2) + ((botRoom + H * s + gapPad) - vh / 2) * e;
+    // the photo band opens only in the space the two words have left between them, so it never covers a letter
+    const a = w1.getBoundingClientRect().bottom + gapPad, z = w2.getBoundingClientRect().top - gapPad;
+    const mid = (a + z) / 2;
+    const topIn = Math.min(a, mid), botIn = vh - Math.max(z, mid);
     gap.style.clipPath = `inset(${topIn}px 0 ${botIn}px 0 round 6px)`;
     const sl = $("#slides"); if (sl) { sl.style.top = topIn + "px"; sl.style.bottom = botIn + "px"; }
     if (cap) {
