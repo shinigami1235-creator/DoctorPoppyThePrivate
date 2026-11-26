@@ -180,12 +180,24 @@
   }
 
   // ---------- Prices ----------
-  function priceItem(x) {
-    const label = lang === "th" ? x.th : x.en;
-    const detail = lang === "th" ? x.detail_th : x.detail_en;
+  // Prices are tags pinned to the clinic's marble wall
+  function priceBits(x) {
     const unit = lang === "th" ? x.unit_th : x.unit_en;
-    const was = x.was ? `<del>฿${baht(x.was)}</del>` : "";
-    return `<li class="${x.was ? "star" : ""}"><span class="t">${esc(label)}</span>${detail ? `<span class="s">${esc(detail)}</span>` : ""}<span class="p">${was}฿${baht(x.price)}${unit ? `<small>${esc(unit)}</small>` : ""}</span></li>`;
+    const was = x.was ? `<del class="hand">฿${baht(x.was)}</del>` : "";
+    return `${was}<b>฿${baht(x.price)}</b>${unit ? `<small>${esc(unit)}</small>` : ""}`;
+  }
+  function ptag(x, i) {
+    const label = lang === "th" ? x.th : x.en, detail = lang === "th" ? x.detail_th : x.detail_en;
+    const r = [-2.5, 1.8, -1.2, 2.6, -1.8, 1.2][i % 6], len = [26, 38, 30, 44, 34, 28][i % 6];
+    return `<div class="ptag${x.was ? " hot" : ""}" style="--r:${r}deg;--len:${len}px"><div class="pt-body">
+      <h4>${esc(label)}</h4>${detail ? `<p>${esc(detail)}</p>` : ""}<div class="pt-price">${priceBits(x)}</div></div></div>`;
+  }
+  function feat(x) {
+    const m = (window.MACHINES || []).find(k => k.treatment === x.id) || {};
+    const label = lang === "th" ? x.th : x.en, detail = lang === "th" ? x.detail_th : x.detail_en;
+    return `<article class="feat"><div class="ft-pic"><img src="${esc(m.photo || "")}" alt="${esc(m.name || label)}" loading="lazy"></div>
+      <div class="ft-txt"><span class="ft-maker">${esc(m.maker || "")}</span><h4>${esc(label)}</h4>${detail ? `<p>${esc(detail)}</p>` : ""}</div>
+      <div class="ptag pin${x.was ? " hot" : ""}" style="--r:5deg;--len:0px"><div class="pt-body"><div class="pt-price">${priceBits(x)}</div></div></div></article>`;
   }
 
   // ---------- Machines showroom ----------
@@ -247,18 +259,20 @@
   function heroFrame() {
     if (!hero || reduce) return;
     const w1 = $(".w1"), w2 = $(".w2"), gap = $("#gap"), panels = $(".panels"), cap = $("#gapCaption");
-    const vh = innerHeight;
+    const stick = $(".hero-stick"), sr = stick.getBoundingClientRect(), vh = sr.height;
     const r = hero.getBoundingClientRect();
-    const p = Math.min(1, Math.max(0, -r.top / (r.height - vh)));
-    const e = 1 - Math.pow(1 - Math.min(1, p / 0.4), 3);
+    const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
+    const mob = innerWidth <= 760;
+    // phones open with the photo already showing between the words
+    const e = mob ? 1 : 1 - Math.pow(1 - Math.min(1, p / 0.4), 3);
     const H = w1.offsetHeight;
-    const topRoom = 82, botRoom = 16, gapPad = 12;
+    const topRoom = mob ? 74 : 82, botRoom = mob ? 78 : 16, gapPad = mob ? 8 : 12;
     const s = Math.min(1, Math.max(0.28, (vh * 0.11) / H));
     const scale = 1 - (1 - s) * e;
     w1.style.transform = `translateY(${(topRoom - w1.offsetTop) * e}px) scale(${scale})`;
     w2.style.transform = `translateY(${((vh - botRoom) - (w2.offsetTop + w2.offsetHeight)) * e}px) scale(${scale})`;
-    // the photo band opens only in the space the two words have left between them, so it never covers a letter
-    const a = w1.getBoundingClientRect().bottom + gapPad, z = w2.getBoundingClientRect().top - gapPad;
+    // the photo band opens only in the space the two words leave between them, so it never covers a letter
+    const a = w1.getBoundingClientRect().bottom - sr.top + gapPad, z = w2.getBoundingClientRect().top - sr.top - gapPad;
     const mid = (a + z) / 2;
     const topIn = Math.min(a, mid), botIn = vh - Math.max(z, mid);
     gap.style.clipPath = `inset(${topIn}px 0 ${botIn}px 0 round 6px)`;
@@ -271,8 +285,8 @@
       if (innerWidth > 760) { panels.style.top = ((topIn + vh - botIn) / 2) + "px"; panels.style.bottom = "auto"; }
       else { panels.style.top = "auto"; panels.style.bottom = (botIn + 14) + "px"; }
     }
-    $$(".panel").forEach((el, k) => el.classList.toggle("in", p > 0.42 + k * 0.1));
-    const sub = $(".hero-sub"); if (sub) sub.style.opacity = String(Math.max(0, 1 - p * 6));
+    $$(".panel").forEach((el, k) => el.classList.toggle("in", p > (mob ? 0.18 + k * 0.1 : 0.42 + k * 0.1)));
+    const sub = $(".hero-sub"); if (sub) sub.style.opacity = mob ? "0" : String(Math.max(0, 1 - p * 6));
   }
 
   // ---------- Render everything for the current language ----------
@@ -284,9 +298,11 @@
     $$(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
     const lg = $("#latestGuest"); if (lg && guests[0]) lg.innerHTML = `${esc(name(guests[0]))}<small>${month(guests[0].date)}</small>`;
     const T = window.TREATMENTS || {};
-    if ($("#skinList")) $("#skinList").innerHTML = (T.skin || []).map(priceItem).join("");
-    if ($("#dentalList")) $("#dentalList").innerHTML = (T.dental || []).map(priceItem).join("");
-    if ($("#brideList")) $("#brideList").innerHTML = (T.bridal || []).map(priceItem).join("");
+    const withMachine = x => (window.MACHINES || []).some(m => m.treatment === x.id);
+    if ($("#skinFeat")) $("#skinFeat").innerHTML = (T.skin || []).filter(withMachine).map(feat).join("");
+    if ($("#skinList")) $("#skinList").innerHTML = (T.skin || []).filter(x => !withMachine(x)).map(ptag).join("");
+    if ($("#dentalList")) $("#dentalList").innerHTML = (T.dental || []).map(ptag).join("");
+    if ($("#brideList")) $("#brideList").innerHTML = (T.bridal || []).map(ptag).join("");
     book3d(); doctor(); machines(); hours(); book(); slides();
     $$(".stats b").forEach(b => { if (b.dataset.done) b.textContent = (+b.dataset.count).toFixed(+(b.dataset.dec || 0)) + (b.dataset.suffix || ""); });
   }
